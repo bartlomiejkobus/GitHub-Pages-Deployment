@@ -135,19 +135,22 @@
         now.toLocaleString('pl-PL', { dateStyle:'medium', timeStyle:'short' });
     }
 
-    // simple greeting using your name
-    function showGreeting() {
-      const el = document.getElementById('greetingText');
-      el.textContent = `Hi, I’m Bartłomiej Kobus — nice to meet you!`;
-      document.getElementById('greetingArea').style.display = 'block';
-    }
-
     // toggle light/dark theme by toggling a class on <html>
     document.getElementById('toggleTheme').addEventListener('click', () => {
       document.documentElement.classList.toggle('dark');
     });
 
-    document.getElementById('showGreeting').addEventListener('click', showGreeting);
+    // toggle greeting display
+    document.getElementById('showGreeting').addEventListener('click', () => {
+    const greetingArea = document.getElementById('greetingArea');
+    const greetingText = document.getElementById('greetingText');
+    if (greetingArea.style.display === 'none' || greetingArea.style.display === '') {
+        greetingText.textContent = `Hi, I’m Bartłomiej Kobus — nice to meet you!`;
+        greetingArea.style.display = 'block';
+    } else {
+        greetingArea.style.display = 'none';
+    }
+    });
 
     // initialize
     showNow();
