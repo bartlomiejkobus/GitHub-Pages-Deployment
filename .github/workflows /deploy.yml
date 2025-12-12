@@ -1,0 +1,41 @@
+name: Deploy static content to Pages
+
+on:
+  push:
+    branches:
+      - "main" # Trigger workflow only on pushes to main branch
+    paths:
+      - "docs/index.html" # Only run if index.html changes
+
+  workflow_dispatch: # Allow manual triggering from GitHub UI
+
+permissions:
+  contents: read # Allow reading repo contents (needed for checkout)
+  pages: write # Allow writing to GitHub Pages
+  id-token: write # Needed for authentication during deploy
+
+concurrency:
+  group: "pages" # Ensure only one deployment at a time
+  cancel-in-progress: false # Do not cancel the running job; skip intermediate runs
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }} # Set environment URL from deploy output
+    runs-on: ubuntu-latest # Runner OS for the job
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4 # Get repository code
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5 # Prepare GitHub Pages for deployment
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "docs/index.html" # Upload the file to be deployed
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4 # Deploy the artifact to GitHub Pages
